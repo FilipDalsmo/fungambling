@@ -1,0 +1,663 @@
+/* Casino felt geometry is independent of card count and round stage. */
+.game-page .felt-table {
+  --card-width: 54px;
+  --card-height: 76px;
+  --card-gap: 9px;
+  min-height: 650px;
+  display: grid;
+  grid-template-columns: 1fr minmax(300px, 1.4fr) 1fr;
+  grid-template-rows: 112px 140px minmax(112px, auto) 130px 36px;
+  gap: 0;
+  padding: 24px 30px 16px;
+  border: 10px solid #303c32;
+  border-radius: 100px / 65px;
+  background: radial-gradient(ellipse at 50% 40%, #245b46, #123b2e 78%);
+  box-shadow:
+    inset 0 0 0 2px #9fab6340,
+    inset 0 0 100px #051d1760,
+    0 18px 35px #0004;
+}
+.game-page .felt-table::before {
+  content: "";
+  position: absolute;
+  inset: 15px;
+  border: 1px solid #b9c68a24;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.game-page .felt-brand {
+  top: 26%;
+  font-size: 14px;
+  opacity: 0.22;
+  color: #d3d8a2;
+}
+.game-page .felt-brand span {
+  font-size: 18px;
+}
+.game-page .dealer-zone {
+  grid-area: 1 / 2;
+  align-self: start;
+}
+.game-page .board-zone {
+  grid-area: 2 / 2;
+  align-self: end;
+}
+.game-page .player-zone {
+  grid-area: 3 / 1 / 4 / 4;
+  justify-self: center;
+  align-self: center;
+  max-width: 100%;
+}
+.game-page .ultimate .player-zone {
+  grid-area: 3 / 2;
+  justify-self: start;
+}
+.game-page .table-label {
+  margin: 8px 0;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #becdaf;
+}
+.game-page .felt-table .cards {
+  gap: var(--card-gap);
+  flex-wrap: nowrap;
+  min-height: var(--card-height);
+}
+.game-page .felt-table .playing-card,
+.card-placeholder {
+  width: var(--card-width);
+  height: var(--card-height);
+}
+.game-page .felt-table .card-suit {
+  font-size: 31px;
+}
+.game-page .felt-table .card-corner {
+  font-size: 11px;
+  left: 4px;
+  top: 3px;
+}
+.game-page .felt-table .card-corner.bottom {
+  left: auto;
+  top: auto;
+  right: 4px;
+  bottom: 3px;
+}
+.card-placeholder {
+  display: inline-block;
+  flex-shrink: 0;
+  border: 1px solid #b1c6a42c;
+  border-radius: 6px;
+  background: #102e2310;
+}
+.game-page .dealt-card {
+  animation: table-card-arrive 480ms cubic-bezier(0.16, 0.7, 0.25, 1) both;
+}
+.game-page .card-turn {
+  transition: transform 420ms cubic-bezier(0.2, 0.65, 0.25, 1);
+}
+@keyframes table-card-arrive {
+  from {
+    opacity: 0;
+    transform: translate(42px, -52px) rotate(-4deg) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.game-page .flop-card {
+  animation: flop-packet 1250ms cubic-bezier(0.22, 0.7, 0.2, 1) both;
+  z-index: calc(3 - var(--card-index));
+}
+@keyframes flop-packet {
+  0% {
+    opacity: 0;
+    transform: translate(
+        calc(
+          (0 - var(--card-index)) * (var(--card-width) + var(--card-gap)) - 35px
+        ),
+        -65px
+      )
+      rotate(-5deg);
+  }
+  26%,
+  49% {
+    opacity: 1;
+    transform: translateX(
+      calc(
+        (0 - var(--card-index)) * (var(--card-width) + var(--card-gap)) +
+          var(--card-index) * 2px
+      )
+    );
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+.win-celebration {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, #15251945, #06181065);
+  animation:
+    win-veil 300ms ease-out both,
+    win-fade 350ms 3450ms ease-in forwards;
+}
+.win-panel {
+  position: relative;
+  width: min(360px, 88%);
+  padding: 25px 22px 20px;
+  text-align: center;
+  border: 1px solid #e4d28f;
+  border-radius: 20px;
+  background: radial-gradient(ellipse at top, #435438, #102b23 75%);
+  box-shadow:
+    0 0 70px #dfca6833,
+    0 16px 45px #0007,
+    inset 0 0 0 5px #e7d4840b;
+  pointer-events: auto;
+  animation: win-arrive 600ms cubic-bezier(0.18, 0.8, 0.23, 1) both;
+}
+.win-emblem {
+  display: block;
+  font-size: 27px;
+  color: #e7d28e;
+  margin-bottom: 8px;
+}
+.win-kicker {
+  color: #c6d2b9;
+  font-size: 9px;
+  letter-spacing: 3px;
+}
+.win-panel h2 {
+  font-size: 36px;
+  color: #fff5ca;
+  margin: 8px 0 14px;
+  font-weight: 600;
+}
+.win-amount {
+  color: #f2da86;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  margin: 0;
+  text-shadow: 0 0 25px #e9c55844;
+  animation: win-amount 650ms 150ms ease-out both;
+}
+.win-amount > span {
+  font-size: 0.65em;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.win-amount small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 1.8px;
+  color: #d9dfc6;
+  margin-top: 12px;
+}
+.win-breakdown {
+  font-size: 11px;
+  color: #b4c3b1;
+  margin: 16px 0;
+}
+.win-dismiss {
+  color: #efe8c4;
+  border: 1px solid #d5d59e66;
+  border-radius: 8px;
+  background: #d6d6950e;
+  padding: 9px 27px;
+  font-size: 12px;
+}
+.win-dismiss:hover {
+  background: #d6d69525;
+}
+.win-dismiss:focus-visible {
+  outline: 2px solid #f2da86;
+  outline-offset: 4px;
+}
+.win-sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.win-sparks i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 12px;
+  border-radius: 3px;
+  background: #e8d58a;
+  opacity: 0;
+  animation: win-spark 1800ms calc(var(--spark) * 35ms) ease-out both;
+}
+@keyframes win-veil {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes win-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes win-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes win-amount {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes win-spark {
+  0% {
+    opacity: 0;
+    transform: rotate(calc(var(--spark) * 30deg)) translateY(-80px);
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(calc(var(--spark) * 30deg)) translateY(-250px)
+      rotate(90deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .win-celebration,
+  .win-panel,
+  .win-amount {
+    animation: none;
+  }
+  .win-sparks {
+    display: none;
+  }
+}
+.felt-paytable {
+  align-self: center;
+  color: #bdcaaa85;
+  font-size: 11px;
+  max-width: 180px;
+  width: 100%;
+}
+.felt-paytable h3 {
+  text-align: center;
+  font:
+    italic 20px Georgia,
+    serif;
+  border-bottom: 1px solid #d4d5a12b;
+  padding-bottom: 9px;
+  margin-bottom: 12px;
+}
+.felt-paytable > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 0;
+}
+.paytable-left {
+  grid-area: 2 / 1 / 4 / 2;
+  justify-self: start;
+}
+.paytable-right {
+  grid-area: 2 / 3 / 4 / 4;
+  justify-self: end;
+}
+.game-page .blackjack .player-zone {
+  align-self: start;
+}
+.game-page .blackjack-hands {
+  gap: 18px;
+}
+.game-page .blackjack-hand {
+  max-width: 100%;
+  padding: 9px 14px;
+}
+.game-page .blackjack-hand .cards {
+  flex-wrap: wrap;
+  width: 180px;
+  justify-content: flex-start;
+  row-gap: 12px;
+}
+.game-page .blackjack-hand .dealt-card + .dealt-card {
+  margin-left: -19px;
+}
+.game-page .round-message {
+  grid-area: 5 / 1 / 6 / 4;
+  justify-self: center;
+  align-self: center;
+  padding: 6px 14px;
+  font-size: 11px;
+  max-width: 95%;
+}
+.game-page .round-message strong {
+  display: inline;
+  font-size: 14px;
+  margin-left: 10px;
+}
+.felt-caption {
+  position: absolute;
+  bottom: 7px;
+  left: 20px;
+  right: 20px;
+  text-align: center;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: #a9bc8770;
+}
+.betting-spots {
+  grid-area: 4 / 1 / 5 / 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  align-self: center;
+}
+.bet-spot {
+  width: 108px;
+  height: 77px;
+  border: 1.5px solid #c1cc8f75;
+  border-radius: 50%;
+  background: #102e2118;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4dbb2;
+  transition:
+    background 0.18s,
+    border-color 0.18s,
+    box-shadow 0.18s;
+}
+.bet-spot:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.bet-spot:not(:disabled):hover,
+.bet-spot:not(:disabled):focus-visible {
+  background: #a3ca8c22;
+  border-color: #dce8a8;
+  box-shadow: 0 0 24px #d7ec9220;
+}
+.bet-spot:focus-visible,
+.tray-chip:focus-visible {
+  outline: 2px solid #e5eead;
+  outline-offset: 5px;
+}
+.spot-label {
+  position: absolute;
+  top: -10px;
+  background: #1a4433;
+  padding: 2px 7px;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.spot-plus {
+  font-size: 19px;
+  opacity: 0.4;
+}
+.spot-side,
+.spot-side2 {
+  border-radius: 22px;
+  width: 100px;
+  height: 66px;
+}
+.bet-spot.has-chips {
+  border-color: #d0d9a5;
+}
+.table-bankroll {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #17241c;
+  border-radius: 8px;
+  color: #9ba996;
+  font-size: 11px;
+}
+.table-bankroll strong {
+  margin-left: 8px;
+  color: #e1e7d7;
+  font-size: 14px;
+}
+.game-page .betting-panel {
+  margin-top: 12px;
+  padding: 16px;
+}
+.game-page .bet-form {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+.chip-tray-wrap {
+  flex: 1;
+  min-width: 0;
+}
+.chip-tray {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 16px;
+  border: 1px solid #87956444;
+  border-radius: 12px;
+  background: linear-gradient(#213023, #151e18);
+  box-shadow: inset 0 2px 9px #0003;
+}
+.tray-chip {
+  border: 0;
+  padding: 4px;
+  background: transparent;
+  border-radius: 50%;
+  cursor: grab;
+  transition: transform 0.18s;
+}
+.tray-chip:active {
+  cursor: grabbing;
+}
+.tray-chip[aria-pressed="true"] {
+  outline: 2px solid #d6e389;
+  outline-offset: 2px;
+  transform: translateY(-3px);
+}
+.casino-chip {
+  width: 47px;
+  height: 47px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 5px dashed #e9eed8;
+  background: var(--chip-color);
+  border-radius: 50%;
+  color: #19282b;
+  box-shadow:
+    0 3px 0 #0b171c,
+    0 5px 7px #0005;
+  font-size: 11px;
+  font-weight: 800;
+}
+.casino-chip > span {
+  border: 1px solid #24383055;
+  border-radius: 50%;
+  width: 33px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bet-spot .casino-chip {
+  animation: chip-place 200ms ease-out;
+  box-shadow:
+    0 3px 0 #718379,
+    0 5px 0 #182921,
+    0 7px 8px #0004;
+}
+@keyframes chip-place {
+  from {
+    transform: translateY(-8px) scale(1.08);
+  }
+  to {
+    transform: none;
+  }
+}
+.tray-help {
+  font-size: 10px;
+  color: #9cab99;
+  margin: 10px 0 0;
+}
+.bet-error {
+  color: #ffc2b5;
+  font-size: 12px;
+}
+@media (max-width: 1100px) {
+  .felt-paytable {
+    font-size: 9px;
+    max-width: 130px;
+  }
+  .game-page .felt-table {
+    padding-left: 20px;
+    padding-right: 20px;
+    grid-template-columns: 1fr 300px 1fr;
+  }
+  .chip-tray {
+    gap: 8px;
+    padding: 10px;
+  }
+}
+@media (max-width: 800px) {
+  .felt-paytable {
+    display: none;
+  }
+  .game-page .felt-table {
+    grid-template-columns: 1fr;
+    grid-template-rows: 105px 130px minmax(115px, auto) 115px 50px;
+    border-radius: 50px;
+    padding: 20px 12px;
+    min-height: 580px;
+  }
+  .game-page .dealer-zone {
+    grid-area: 1 / 1;
+  }
+  .game-page .board-zone {
+    grid-area: 2 / 1;
+  }
+  .game-page .player-zone,
+  .game-page .ultimate .player-zone {
+    grid-area: 3 / 1;
+    justify-self: center;
+  }
+  .betting-spots {
+    grid-area: 4 / 1;
+    gap: 12px;
+  }
+  .game-page .round-message {
+    grid-area: 5 / 1;
+  }
+  .game-page .felt-table {
+    --card-width: 44px;
+    --card-height: 63px;
+    --card-gap: 6px;
+  }
+  .game-page .felt-table .card-suit {
+    font-size: 25px;
+  }
+  .game-page .felt-table .card-corner {
+    font-size: 9px;
+  }
+  .bet-spot {
+    width: 77px;
+    height: 64px;
+  }
+  .spot-side,
+  .spot-side2 {
+    width: 77px;
+    height: 58px;
+  }
+  .spot-label {
+    font-size: 7px;
+    letter-spacing: 0.5px;
+    padding: 2px 3px;
+  }
+  .spots-ultimate {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .spots-ultimate .bet-spot {
+    width: 62px;
+    height: 60px;
+  }
+  .game-page .blackjack-hands {
+    gap: 8px;
+  }
+  .game-page .blackjack-hand {
+    padding: 6px;
+  }
+  .game-page .blackjack-hand .cards {
+    width: 125px;
+  }
+  .game-page .bet-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .chip-tray {
+    justify-content: center;
+  }
+  .casino-chip {
+    width: 41px;
+    height: 41px;
+    font-size: 10px;
+  }
+  .casino-chip > span {
+    width: 29px;
+    height: 29px;
+  }
+  .table-bankroll {
+    padding: 12px;
+    font-size: 10px;
+  }
+  .table-bankroll > span:last-child {
+    width: 100%;
+    text-align: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .game-page .dealt-card,
+  .bet-spot .casino-chip {
+    animation: none;
+  }
+  .game-page .card-turn,
+  .tray-chip {
+    transition: none;
+  }
+}

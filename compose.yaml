@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      APP_ORIGIN: ${APP_ORIGIN:-http://localhost:3000}
+      DATABASE_PATH: /app/data/fun-gambling.sqlite
+      TRUST_PROXY: "false"
+    volumes:
+      - casino-data:/app/data
+    restart: unless-stopped
+volumes:
+  casino-data:
